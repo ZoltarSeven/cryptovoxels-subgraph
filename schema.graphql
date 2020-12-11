@@ -12,6 +12,14 @@ type Parcel @entity {
   tokenURI: String!
 }
 
+type Name @entity {
+  id: ID!
+  tokenID: BigInt!
+  name: String!
+  owner: Account!
+  createdAt: BigInt!
+}
+
 type Wearable @entity {
   id: ID!
   owners: [AccountWearable!] @derivedFrom(field: "wearable")
@@ -23,6 +31,19 @@ type Wearable @entity {
   category: Category!
   
 }
+type Category @entity {
+  id: ID!
+  tokenID: BigInt!
+  wearable: [Wearable!]! @derivedFrom(field: "category")
+
+}
+type AccountWearable @entity {
+   id: ID!
+   account: Account!
+   wearable: Wearable!
+   quantity: BigInt!
+}
+
 type Account @entity {
   id: ID!
   address: Bytes!
@@ -31,24 +52,6 @@ type Account @entity {
   wearable: [AccountWearable]! @derivedFrom(field: "account")
 }
 
-type AccountWearable @entity {
-   id: ID!
-   account: Account!
-   wearable: Wearable!
-   quantity: BigInt!
-}
 
-type Category @entity {
-  id: ID!
-  tokenID: BigInt!
-  wearable: [Wearable!]! @derivedFrom(field: "category")
 
-}
 
-type Name @entity {
-  id: ID!
-  tokenID: BigInt!
-  name: String!
-  owner: Account!
-  createdAt: BigInt!
-}
