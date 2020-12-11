@@ -1,0 +1,87 @@
+specVersion: 0.0.2
+description: Cryptovoxels Subgraph
+repository: https://github.com/ZoltarSeven/cryptovoxels-subgraph
+schema:
+  file: ./schema.graphql
+dataSources:
+  #----Parcel----
+  #--------------
+  - kind: ethereum/contract
+    name: Parcel
+    network: mainnet
+    source:
+      address: '0x79986aF15539de2db9A5086382daEdA917A9CF0C'
+      abi: Parcel
+      startBlock: 5735964
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/Parcel.ts
+      entities:
+        - Parcel
+      abis:
+        - name: Parcel
+          file: ./abis/Parcel.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransferParcel
+        - event: SetPrice(uint256,uint256)
+          handler: handleSetPrice
+      callHandlers:
+        - function: mint(address,uint256,int16,int16,int16,int16,int16,int16,uint256)
+          handler: handleMintParcel
+  #----Name--------
+  #----------------
+  - kind: ethereum/contract
+    name: Name
+    network: mainnet
+    source:
+      address: '0x4243a8413A77Eb559c6f8eAFfA63F46019056d08'
+      abi: Name
+      startBlock: 5735964 
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/Name.ts
+      entities:
+        - Name
+      abis:
+        - name: Name
+          file: ./abis/Name.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransferName
+      callHandlers:
+        - function: mint(address,string)
+          handler: handleMintName
+      
+  #----Wearables----
+  #-----------------
+  - kind: ethereum/contract
+    name: Wearables
+    network: mainnet
+    source:
+      address: '0xa58b5224e2FD94020cb2837231B2B0E4247301A6'
+      abi: Wearables
+      startBlock: 5735964
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/Wearables.ts
+      entities:
+        - Wearable
+      abis:
+        - name: Wearables
+          file: ./abis/Wearables.json
+      eventHandlers:
+        - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleTransferSingle
+        - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
+          handler: handleTransferBatch
+      callHandlers:
+        - function: mint(address,uint256,uint256,bytes)
+          handler: handleMintWearable
+
