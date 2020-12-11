@@ -1,3 +1,4 @@
+
 import { Transfer, MintCall} from '../generated/Parcel/Parcel'
 import { Parcel, Account } from '../generated/schema'
 import { Address, log, store } from '@graphprotocol/graph-ts'
@@ -30,16 +31,24 @@ export function handleMintParcel(_: MintCall): void {
   parcel.createdAt = _.block.timestamp
   parcel.tokenURI = "https://www.cryptovoxels.com/p/" + parcel.tokenID.toString()
   
-  
-
+  let lengthLocation: number
   if (parcel.length % 2 == 1) {
-  parcel.length = parcel.length + 1
+  lengthLocation = parcel.length + 1
   }
-  
-  let west:  number = ((parcel.length/2) - _.inputs.x2)
-  let east:  number = ((parcel.length/2) + _.inputs.x1)
-  let north: number = (_.inputs.z1 + (parcel.length/2))
-  let south: number = ((parcel.length/2) - _.inputs.z2)
+  else {
+  lengthLocation = parcel.length
+  }
+  let widthLocation: number
+  if (parcel.width % 2 == 1) {
+    widthLocation = parcel.width + 1
+    }
+    else {
+    widthLocation = parcel.width
+    }
+  let west:  number = ((lengthLocation/2) - _.inputs.x2)
+  let east:  number = ((lengthLocation/2) + _.inputs.x1)
+  let north: number = (_.inputs.z1 + (widthLocation/2))
+  let south: number = ((widthLocation/2) - _.inputs.z2)
 
 
   if (_.inputs.x1 < 0 && _.inputs.z1 < 0) {
@@ -83,3 +92,4 @@ else if (event.params._from.toHex() != '0x00000000000000000000000000000000000000
   }
 
 }
+
