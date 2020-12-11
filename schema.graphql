@@ -1,0 +1,54 @@
+type Parcel @entity {
+  id: ID!
+  tokenID: BigInt!
+  location: String!
+  buildHeight: Int!
+  area: Int!
+  length: Int!
+  width: Int!
+  volumeInVoxels: Int!
+  owner: Account!
+  createdAt: BigInt!
+  tokenURI: String
+}
+
+type Wearable @entity {
+  id: ID!
+  owners: [AccountWearable!] @derivedFrom(field: "wearable")
+  initialQuantity: BigInt! 
+  currentQuantity: BigInt
+  author: Bytes!
+  rarity: String!
+  createdAt: BigInt!
+  category: Category!
+  
+}
+type Account @entity {
+  id: ID!
+  address: Bytes!
+  parcel: [Parcel]! @derivedFrom(field: "owner")
+  name: [Name]! @derivedFrom(field: "owner")
+  wearable: [AccountWearable]! @derivedFrom(field: "account")
+}
+
+type AccountWearable @entity {
+   id: ID!
+   account: Account!
+   wearable: Wearable!
+   quantity: BigInt!
+}
+
+type Category @entity {
+  id: ID!
+  tokenID: BigInt!
+  wearable: [Wearable!]! @derivedFrom(field: "category")
+
+}
+
+type Name @entity {
+  id: ID!
+  tokenID: BigInt!
+  name: String!
+  owner: Account!
+  createdAt: BigInt!
+}
