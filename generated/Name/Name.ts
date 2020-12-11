@@ -610,3 +610,4 @@ export class ConstructorCall__Outputs {
     this._call = call;
   }
 }
+
