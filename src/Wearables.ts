@@ -1,3 +1,4 @@
+
 import { TransferSingle, TransferBatch } from '../generated/Wearables/Wearables'
 import { Wearable, Category, Account, AccountWearable } from '../generated/schema'
 import { BigInt, store, ethereum, Address, log } from "@graphprotocol/graph-ts"
@@ -81,6 +82,7 @@ export function handleTransferSingle(event: TransferSingle): void {
             accountwearableFrom = new AccountWearable(event.params._from.toHex()+wearable.id)
         }
         accountwearableFrom.quantity = accountwearableFrom.quantity.minus(event.params._amount)
+        accountwearableFrom.account = event.params._from
         accountwearableFrom.save()
         if (accountwearableFrom.quantity == BigInt.fromI32(0)){
             store.remove('AccountWearable', event.params._from.toHex())
@@ -110,7 +112,9 @@ export function handleTransferSingle(event: TransferSingle): void {
             accountwearableFrom = new AccountWearable(event.params._from.toHex()+wearable.id)
         }
         accountwearableFrom.quantity = accountwearableFrom.quantity.minus(event.params._amount)
+        accountwearableFrom.account = event.params._from
         accountwearableFrom.save()
+        
         if (accountwearableFrom.quantity == BigInt.fromI32(0)){
             store.remove('AccountWearable', event.params._from.toHex()+wearable.id)
         }
@@ -189,6 +193,7 @@ export function handleTransferBatch(event: TransferBatch): void {
             accountwearableFrom = new AccountWearable(event.params._from.toHex()+wearable.id)
         }
         accountwearableFrom.quantity = accountwearableFrom.quantity.minus(amounts[i])
+        accountwearableFrom.account = event.params._from
         accountwearableFrom.save()
         if (accountwearableFrom.quantity == BigInt.fromI32(0)){
             store.remove('AccountWearable', event.params._from.toHex())
@@ -197,7 +202,6 @@ export function handleTransferBatch(event: TransferBatch): void {
     }
     else {
         
-
         let account = getOrCreateAccount(event.params._to.toHex())
         account.address = event.params._to
         account.save()
@@ -219,6 +223,7 @@ export function handleTransferBatch(event: TransferBatch): void {
             accountwearableFrom = new AccountWearable(event.params._from.toHex()+wearable.id)
         }
         accountwearableFrom.quantity = accountwearableFrom.quantity.minus(amounts[i])
+        accountwearableFrom.account = event.params._from
         accountwearableFrom.save()
         if (accountwearableFrom.quantity == BigInt.fromI32(0)){
             store.remove('AccountWearable', event.params._from.toHex()+wearable.id)
