@@ -100,6 +100,7 @@ export function handleTransferSingle(event: TransferSingle): void {
         let accountwearableTo = AccountWearable.load(account.id+wearable.id)
         if (accountwearableTo == null) {
             accountwearableTo = new AccountWearable(account.id+wearable.id)
+            accountwearableTo.quantity = BigInt.fromI32(0)
         }
         accountwearableTo.account = account.id
         accountwearableTo.wearable = wearable.id
@@ -109,6 +110,7 @@ export function handleTransferSingle(event: TransferSingle): void {
         let accountwearableFrom = AccountWearable.load(event.params._from.toHex()+wearable.id)
         if (accountwearableFrom == null) {
             accountwearableFrom = new AccountWearable(event.params._from.toHex()+wearable.id)
+            accountwearableFrom.quantity = BigInt.fromI32(0)
         }
         accountwearableFrom.quantity = accountwearableFrom.quantity.minus(event.params._amount)
         accountwearableFrom.account = event.params._from.toHex()
@@ -211,6 +213,7 @@ export function handleTransferBatch(event: TransferBatch): void {
         let accountwearableTo = AccountWearable.load(account.id+wearable.id)
         if (accountwearableTo == null) {
             accountwearableTo = new AccountWearable(account.id+wearable.id)
+            accountwearableTo.quantity = BigInt.fromI32(0)
         }
         accountwearableTo.account = account.id
         accountwearableTo.wearable = wearable.id
@@ -220,6 +223,7 @@ export function handleTransferBatch(event: TransferBatch): void {
         let accountwearableFrom = AccountWearable.load(event.params._from.toHex()+wearable.id)
         if (accountwearableFrom == null) {
             accountwearableFrom = new AccountWearable(event.params._from.toHex()+wearable.id)
+            accountwearableFrom.quantity = BigInt.fromI32(0)
         }
         accountwearableFrom.quantity = accountwearableFrom.quantity.minus(amounts[i])
         accountwearableFrom.account = event.params._from.toHex()
