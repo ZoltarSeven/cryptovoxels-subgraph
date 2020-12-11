@@ -1,6 +1,6 @@
-import { Transfer, MintCall} from '../generated/Name/Name'
+import { MintCall, Transfer} from '../generated/Name/Name'
 import { Name, Account } from '../generated/schema'
-import { Address, store, log } from '@graphprotocol/graph-ts'
+import { Address, store, log, } from '@graphprotocol/graph-ts'
 
 
 function getOrCreateAccount(id: string) : Account {
@@ -28,23 +28,23 @@ export function handleMintName(_:MintCall): void {
     name.save()
     
 }
-
-export function handleTransferName(event: Transfer): void {
+export function handleTransfer(event: Transfer): void {
     
-    if (event.params._to.toHex() == '0x0000000000000000000000000000000000000000'){
-      let name = Name.load(event.params._tokenId.toHex())
-      name.save()
-      store.remove('Name', event.params._tokenId.toHex())
+  if (event.params._to.toHex() == '0x0000000000000000000000000000000000000000'){
+    let name = Name.load(event.params._tokenId.toHex())
+    name.save()
+    store.remove('Name', event.params._tokenId.toHex())
 
-      }
-    else {
-        let id = event.params._to.toHex()
-        let account = getOrCreateAccount(id)
-        account.address = event.params._to
-        account.save()
-      
-        let name = Name.load(event.params._tokenId.toHex())
-        name.owner = account.id
-        name.save()
     }
+  else if (event.params._from.toHex() != '0x0000000000000000000000000000000000000000'){
+      let id = event.params._to.toHex()
+      let account = getOrCreateAccount(id)
+      account.address = event.params._to
+      account.save()
+    
+      let name = Name.load(event.params._tokenId.toHex())
+      name.owner = account.id
+      name.save()
+  }
 }
+
