@@ -9,14 +9,14 @@ type Parcel @entity {
   volumeInVoxels: Int!
   owner: Account!
   createdAt: BigInt!
-  tokenURI: String
+  tokenURI: String!
 }
 
 type Wearable @entity {
   id: ID!
   owners: [AccountWearable!] @derivedFrom(field: "wearable")
   initialQuantity: BigInt! 
-  currentQuantity: BigInt
+  currentQuantity: BigInt!
   author: Bytes!
   rarity: String!
   createdAt: BigInt!
