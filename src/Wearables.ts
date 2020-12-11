@@ -12,15 +12,7 @@ function getOrCreateAccount(id: string) : Account {
             return account
         } else return Account.load(id) as Account
   }
-function getOrCreateAccountWearable(id: string) : AccountWearable {
-    let exists = AccountWearable.load(id)
-        if(!exists) {
-            let accountwearable = new AccountWearable(id)
-            accountwearable.quantity = BigInt.fromI32(0)
-            accountwearable.save()
-            return accountwearable
-        } else return AccountWearable.load(id) as AccountWearable
-}
+
 
 export function handleTransferSingle(event: TransferSingle): void {
     if (event.params._from.toHexString() == '0x0000000000000000000000000000000000000000') {
@@ -55,7 +47,7 @@ export function handleTransferSingle(event: TransferSingle): void {
         }
         wearable.save()
 
-        let accountwearable = getOrCreateAccountWearable(account.id+wearable.id)
+        let accountwearable = new AccountWearable(account.id+wearable.id)
         accountwearable.account = account.id
         accountwearable.wearable = wearable.id
         accountwearable.quantity = wearable.initialQuantity
@@ -75,13 +67,19 @@ export function handleTransferSingle(event: TransferSingle): void {
         }
         wearable.save()
 
-        let accountwearableTo = getOrCreateAccountWearable(account.id+wearable.id)
+        let accountwearableTo = AccountWearable.load(account.id+wearable.id)
+        if (accountwearableTo == null) {
+            accountwearableTo = new AccountWearable(account.id+wearable.id)
+        }
         accountwearableTo.account = account.id
         accountwearableTo.wearable = wearable.id
         accountwearableTo.quantity = accountwearableTo.quantity.plus(event.params._amount)
         accountwearableTo.save()
 
-        let accountwearableFrom = AccountWearable.load(event.params._from.toHex())
+        let accountwearableFrom = AccountWearable.load(event.params._from.toHex()+wearable.id)
+        if (accountwearableFrom == null) {
+            accountwearableFrom = new AccountWearable(event.params._from.toHex()+wearable.id)
+        }
         accountwearableFrom.quantity = accountwearableFrom.quantity.minus(event.params._amount)
         accountwearableFrom.save()
         if (accountwearableFrom.quantity == BigInt.fromI32(0)){
@@ -98,13 +96,19 @@ export function handleTransferSingle(event: TransferSingle): void {
         let wearable = Wearable.load(event.params._id.toHex())
         wearable.save()
 
-        let accountwearableTo = getOrCreateAccountWearable(account.id+wearable.id)
+        let accountwearableTo = AccountWearable.load(account.id+wearable.id)
+        if (accountwearableTo == null) {
+            accountwearableTo = new AccountWearable(account.id+wearable.id)
+        }
         accountwearableTo.account = account.id
         accountwearableTo.wearable = wearable.id
         accountwearableTo.quantity = accountwearableTo.quantity.plus(event.params._amount)
         accountwearableTo.save()
 
         let accountwearableFrom = AccountWearable.load(event.params._from.toHex()+wearable.id)
+        if (accountwearableFrom == null) {
+            accountwearableFrom = new AccountWearable(event.params._from.toHex()+wearable.id)
+        }
         accountwearableFrom.quantity = accountwearableFrom.quantity.minus(event.params._amount)
         accountwearableFrom.save()
         if (accountwearableFrom.quantity == BigInt.fromI32(0)){
@@ -150,7 +154,7 @@ export function handleTransferBatch(event: TransferBatch): void {
         }
         wearable.save()
 
-        let accountwearable = getOrCreateAccountWearable(account.id+wearable.id)
+        let accountwearable = new AccountWearable(account.id+wearable.id)
         accountwearable.account = account.id
         accountwearable.wearable = wearable.id
         accountwearable.quantity = wearable.initialQuantity
@@ -171,13 +175,19 @@ export function handleTransferBatch(event: TransferBatch): void {
         }
         wearable.save()
 
-        let accountwearableTo = getOrCreateAccountWearable(account.id+wearable.id)
+        let accountwearableTo = AccountWearable.load(account.id+wearable.id)
+        if (accountwearableTo == null) {
+            accountwearableTo = new AccountWearable(account.id+wearable.id)
+        }
         accountwearableTo.account = account.id
         accountwearableTo.wearable = wearable.id
         accountwearableTo.quantity = accountwearableTo.quantity.plus(amounts[i])
         accountwearableTo.save()
 
-        let accountwearableFrom = AccountWearable.load(event.params._from.toHex())
+        let accountwearableFrom = AccountWearable.load(event.params._from.toHex()+wearable.id)
+        if (accountwearableFrom == null) {
+            accountwearableFrom = new AccountWearable(event.params._from.toHex()+wearable.id)
+        }
         accountwearableFrom.quantity = accountwearableFrom.quantity.minus(amounts[i])
         accountwearableFrom.save()
         if (accountwearableFrom.quantity == BigInt.fromI32(0)){
@@ -195,13 +205,19 @@ export function handleTransferBatch(event: TransferBatch): void {
         let wearable = Wearable.load(ids[i].toHex())
         wearable.save()
 
-        let accountwearableTo = getOrCreateAccountWearable(account.id+wearable.id)
+        let accountwearableTo = AccountWearable.load(account.id+wearable.id)
+        if (accountwearableTo == null) {
+            accountwearableTo = new AccountWearable(account.id+wearable.id)
+        }
         accountwearableTo.account = account.id
         accountwearableTo.wearable = wearable.id
         accountwearableTo.quantity = accountwearableTo.quantity.plus(amounts[i])
         accountwearableTo.save()
 
         let accountwearableFrom = AccountWearable.load(event.params._from.toHex()+wearable.id)
+        if (accountwearableFrom == null) {
+            accountwearableFrom = new AccountWearable(event.params._from.toHex()+wearable.id)
+        }
         accountwearableFrom.quantity = accountwearableFrom.quantity.minus(amounts[i])
         accountwearableFrom.save()
         if (accountwearableFrom.quantity == BigInt.fromI32(0)){
