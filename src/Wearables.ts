@@ -233,4 +233,3 @@ export function handleTransferBatch(event: TransferBatch): void {
         }
     }
     }}
-
